@@ -28,7 +28,7 @@ def get_location_details(address):
     location_details = {
         'address': result.get('formatted_address'),
         'latitude': result['geometry']['location']['lat'],
-        'longitude': result['geometry']['location']['lng'],
+        'longitude': result['geometry']['location']['lng']
     }
     return location_details
 
@@ -41,6 +41,8 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
         location = geocode_result[0]['geometry']['location']
         latitude = location['lat']
         longitude = location['lng']
+    else:
+        geocode_result = gmaps.reverse_geocode((longitude, lat))
     places_result = gmaps.places_nearby(
         location=(latitude, longitude),
         radius=radius,  # radius in meters, increased to cover more potential attractions
@@ -67,12 +69,13 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
         photo_reference = place['photos'][0]['photo_reference'] if 'photos' in place and place['photos'] else None
         photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={google_maps_api_key}" if photo_reference else "No image available"
         distance = distances_info[i]['distance']['text'] if distances_info[i]['status'] == 'OK' else "Distance not available"
-        
+        city = place['vicinity'].split(', ')[-1]
         attraction_details = {
             'name': place.get('name'),
             'type': ', '.join(place.get('types', ['Not specified'])),
             'rating': place.get('rating', 'No rating'),
             'address': place.get('vicinity'),
+            'city': city,
             'distance': distance,
             'image_url': photo_url
         }
