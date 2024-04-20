@@ -38,17 +38,19 @@ def get_top_attractions(latitude, longitude, num_attractions=10):
     # Extract the top 10 attractions, focusing on the most relevant details
     attractions_info = []
     destinations = []
-    for place in places_result.get('results', [])[:num]:  # Collect destinations for Distance Matrix API
+    for place in places_result.get('results', [])[:num_attractions]:  # Collect destinations for Distance Matrix API
         if 'geometry' in place:
             lat_lng = place['geometry']['location']
             destinations.append((lat_lng['lat'], lat_lng['lng']))
 
     # Get distances from origin to each destination
     if destinations:
-        distances_result = gmaps.distance_matrix(origins=[origin], destinations=destinations, mode='driving')
+        distances_result = gmaps.distance_matrix(origins=[(latitude, longitude)], destinations=destinations, mode='driving')
         distances_info = distances_result.get('rows')[0]['elements']
+    else:
+        return 'Failed to get destinations'
 
-    for i, place in enumerate(places_result.get('results', [])[:num]):
+    for i, place in enumerate(places_result.get('results', [])[:num_attractions]):
         photo_reference = place['photos'][0]['photo_reference'] if 'photos' in place and place['photos'] else None
         photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={google_maps_api_key}" if photo_reference else "No image available"
         distance = distances_info[i]['distance']['text'] if distances_info[i]['status'] == 'OK' else "Distance not available"
@@ -71,10 +73,10 @@ gemini_api_key = os.getenv("GEMINI_API_KEY")
 def get_places(num_places: int):
     
     pass
-
+"""
 genai.configure(api_key=gemini_api_key)
 print(google_maps_api_key)
 print(gemini_api_key)
 model = genai.GenerativeModel('gemini-1.5-pro-latest')
 response = model.generate_content(r'What is the meaning of life? respond using this JSON schema: {"meanings":[meaning1, meaning2, meaning3]}')
-print(response.text)
+print(response.text)"""
