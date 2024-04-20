@@ -36,12 +36,12 @@ export default function Guide() {
 
     const getLocation = () => {
         if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position) {
+            navigator.geolocation.getCurrentPosition(function (position) {
                 setLatitude(position.coords.latitude);
                 setLongitude(position.coords.longitude);
                 // Optionally, trigger fetching places right after getting the location
                 fetchPlaces();
-            }, function(error) {
+            }, function (error) {
                 console.error("Error Code = " + error.code + " - " + error.message);
             });
         } else {
@@ -49,14 +49,12 @@ export default function Guide() {
         }
     };
 
-
-
     const fetchPlaces = async () => {
         console.log("fetching places")
         let queryParams = new URLSearchParams();
         queryParams.append("num_places", "5");
         queryParams.append("radius", "1000");
-        
+
         if (address) {
             // Send the address directly to the backend
             queryParams.append("address", address);
@@ -67,7 +65,7 @@ export default function Guide() {
             console.log("No location information available.");
             return;
         }
-    
+
 
         const serverUrl = process.env.NEXT_PUBLIC_FLASK_URL;
         const response = await fetch(`${serverUrl}/places?${queryParams}`, {
@@ -82,10 +80,7 @@ export default function Guide() {
         }
     };
 
-    // Example usage: Call fetchPlaces when the address changes, in addition to latitude and longitude.
-    useEffect(() => {
-        fetchPlaces();
-    }, [address]);
+
 
 
     return (
@@ -99,9 +94,9 @@ export default function Guide() {
                                     Use My Location 🧭
                                 </AnimatedButton>
                             </div>
+
                             <p className=" text-gray-700">-or-</p>
                             <div>
-
                                 <div className="relative mt-2 rounded-md shadow-sm">
                                     <input
                                         type="text"
@@ -117,11 +112,17 @@ export default function Guide() {
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <h2 className="text-2xl font-bold pt-6 text-slate-900"> Nearby Places </h2>
-                                {places === null ? (
-                                    <p>Loading places...</p>
-                                ) : places.length > 0 ? (
+                        </div>
+                        <div>
+
+                            {places === null ? (
+                                <div>
+
+                                    <span className="hidden">Loading places...</span>
+                                </div>
+                            ) : places.length > 0 ? (
+                                <div>
+                                    <h2 className="text-2xl font-bold pt-6 text-slate-9000"> Nearby Places </h2>
                                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
                                         {places.map((place, index) => (
                                             <li key={index} className="mb-4 rounded-lg bg-white shadow p-3">
@@ -131,10 +132,10 @@ export default function Guide() {
                                             </li>
                                         ))}
                                     </ul>
-                                ) : (
-                                    <p>No places found.</p>
-                                )}
-                            </div>
+                                </div>
+                            ) : (
+                                <p>No places found.</p>
+                            )}
                         </div>
                     </div>
                 </Container>
