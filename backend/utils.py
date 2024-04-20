@@ -43,7 +43,7 @@ def get_top_attractions(address):
     
     # Extract the top 10 attractions, focusing on the most relevant details
     attractions_info = []
-    for place in places_result.get('results', [])[:10]:  # Limit to top 10 results
+    for place in places_result.get('results', [])[:num]:  # Limit to top 10 results
         attraction_details = {
             'name': place.get('name'),
             'type': ', '.join(place.get('types', ['Not specified'])),
@@ -56,11 +56,12 @@ def get_top_attractions(address):
 
 # Get input from the user
 address = input("Please enter the address or location: ")
+num = int(input("How many attractions: "))
 
 # Retrieve and print attractions information
 attractions_info = get_top_attractions(address)
 if isinstance(attractions_info, list):
-    print("\nTop 10 Attractions:")
+    print(f"\nTop {num} Attractions:")
     for attraction in attractions_info:
         print(f"{attraction['name']} - Rating: {attraction['rating']} - Address: {attraction['address']}")
 else:
