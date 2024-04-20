@@ -27,7 +27,7 @@
 /web/yarn-error.log*
 
 # local env files
-/wb/.env*.local
+/web/.env*.local
 
 # vercel
 /web/.vercel
@@ -36,5 +36,6 @@
 /web/*.tsbuildinfo
 /web/next-env.d.ts
 
+# backend 
 backend/venv
 backend/.env

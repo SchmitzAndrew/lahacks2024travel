@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Container from "@/components/ui/Container";
+import AnimatedButton from "@/components/ui/AnimatedButton";
 
 export default function Guide() {
     // State variables to store latitude and longitude
-    const [latitude, setLatitude] = useState(0);
-    const [longitude, setLongitude] = useState(0);
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
+
+    const [places, setPlaces] = useState<any[]>([]);
 
     useEffect(() => {
         if ("geolocation" in navigator) {
@@ -23,18 +26,41 @@ export default function Guide() {
         }
     }, []);
 
+    useEffect(() => {
+        const fetchPlaces = async () => {
+            if (latitude !== null && longitude !== null) {
+                const queryParams = new URLSearchParams([
+                    ["latitude", latitude.toString()],
+                    ["longitude", longitude.toString()]
+                ]);
+                
+                const serverUrl = process.env.NEXT_PUBLIC_FLASK_URL;
+                console.log(serverUrl);
+                const response = await fetch(`${serverUrl}/api/places?${queryParams}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                const data = await response.json();
+                console.log(data)
+            }
+        }
+        fetchPlaces();
+    }, [latitude, longitude])
+
+
+
     return (
         <>
             <Container>
                 <>
-                <h1> Your Location </h1>
-                {/* Check directly if latitude and longitude are not 0 */}
-                {(latitude !== 0 || longitude !== 0) && (
+                <h1> Your Starting Location </h1>
                     <div>
                         <p>Latitude: {latitude}</p>
                         <p>Longitude: {longitude}</p>
                     </div>
-                )}
+
                 </>
             </Container>
         </>
