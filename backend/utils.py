@@ -25,35 +25,43 @@ def get_location_details(address):
     }
     return location_details
 
-def get_places(address, num_places):
-    """Retrieve details for a number of places near a specified address."""
-    # First get the location details of the given address
+def get_top_attractions(address):
+    """Retrieve details for the top 10 attractions near a specified address."""
     location_details = get_location_details(address)
     if isinstance(location_details, str):
         return location_details  # Return the error message if no results found
     
-    # Use nearby search to find places around the given address
+    # Use nearby search to find attractions around the given address
     latitude = location_details['latitude']
     longitude = location_details['longitude']
-    places_result = gmaps.places_nearby(location=(latitude, longitude), radius=500)  # radius in meters
+    places_result = gmaps.places_nearby(
+        location=(latitude, longitude),
+        radius=10000,  # radius in meters, increased to cover more potential attractions
+        type='tourist_attraction',
+        rank_by='prominence'  # Sort by prominence which considers rating, relevance, and location
+    )
     
-    # Limit the number of places to the requested number
-    places_info = []
-    for place in places_result.get('results', [])[:num_places]:
-        place_details = {
+    # Extract the top 10 attractions, focusing on the most relevant details
+    attractions_info = []
+    for place in places_result.get('results', [])[:10]:  # Limit to top 10 results
+        attraction_details = {
             'name': place.get('name'),
-            'type': place.get('types')[0] if place.get('types') else 'Not specified',
+            'type': ', '.join(place.get('types', ['Not specified'])),
             'rating': place.get('rating', 'No rating'),
+            'address': place.get('vicinity')
         }
-        places_info.append(place_details)
+        attractions_info.append(attraction_details)
     
-    return places_info
+    return attractions_info
 
 # Get input from the user
 address = input("Please enter the address or location: ")
-num_places = int(input("How many nearby places would you like to list? "))
 
-# Retrieve and print places information
-places_info = get_places(address, num_places)
-for place in places_info:
-    print(place)
+# Retrieve and print attractions information
+attractions_info = get_top_attractions(address)
+if isinstance(attractions_info, list):
+    print("\nTop 10 Attractions:")
+    for attraction in attractions_info:
+        print(f"{attraction['name']} - Rating: {attraction['rating']} - Address: {attraction['address']}")
+else:
+    print(attractions_info)
