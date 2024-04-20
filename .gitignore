@@ -41,3 +41,5 @@ backend/venv
 backend/.env
 
 **.pyc
+*/temp
+.venv
