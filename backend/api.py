@@ -1,7 +1,12 @@
 from flask import Flask, jsonify, request
 from utils import get_top_attractions
-app = Flask(__name__)
+from flask_cors import CORS, cross_origin
 
+app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+@cross_origin()
 @app.route('/places', methods=['GET'])
 def get_places():
     latitude = request.args.get('lat')
