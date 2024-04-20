@@ -35,3 +35,6 @@
 # typescript
 /web/*.tsbuildinfo
 /web/next-env.d.ts
+
+backend/venv
+backend/.env
