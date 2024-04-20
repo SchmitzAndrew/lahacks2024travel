@@ -6,6 +6,8 @@ import AnimatedButton from "@/components/ui/AnimatedButton";
 
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 
+import Map from "@/components/ui/Map";
+
 export default function Guide() {
     // State variables to store latitude and longitude
     const [latitude, setLatitude] = useState<number | null>(null);
@@ -80,9 +82,6 @@ export default function Guide() {
         }
     };
 
-
-
-
     return (
         <>
             <div className="">
@@ -117,19 +116,29 @@ export default function Guide() {
 
                             {places === null ? (
                                 <div>
-
                                     <span className="hidden">Loading places...</span>
                                 </div>
                             ) : places.length > 0 ? (
                                 <div>
-                                    <h2 className="text-2xl font-bold pt-6 text-slate-9000"> Nearby Places </h2>
+                                    <h2 className="text-2xl font-bold pt-6 text-slate-900"> Nearby Places </h2>
                                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
                                         {places.map((place, index) => (
-                                            <li key={index} className="mb-4 rounded-lg bg-white shadow p-3">
-                                                <h3 className="text-lg font-semibold text-slate-900">{place.name}</h3>
-                                                <img src={place.image_url} alt={place.name} className="w-full h-auto rounded-xl" />
-                                                <p>{place.description}</p>
-                                            </li>
+                                            index === 0 ? (
+                                                // Render the first element differently
+                                                <li key={index} className="mb-4 rounded-lg bg-blue-100 shadow p-3">
+                                                    <h3 className="text-lg font-semibold text-slate-900">{place.name}</h3>
+                                                    <Map centerLatitude={latitude} centerLongitude={longitude}  placeLatitude={place.placeLatitude} placeLongitude={place.placeLongitude} />
+                                                    <p>{place.description}</p>
+                                                    <p className="text-sm text-blue-700">Featured Place</p>
+                                                </li>
+                                            ) : (
+                                                // Render other elements
+                                                <li key={index} className="mb-4 rounded-lg bg-white shadow p-3">
+                                                    <h3 className="text-lg font-semibold text-slate-900">{place.name}</h3>
+                                                    <img src={place.image_url} alt={place.name} className="w-full h-auto rounded-xl" />
+                                                    <p>{place.description}</p>
+                                                </li>
+                                            )
                                         ))}
                                     </ul>
                                 </div>

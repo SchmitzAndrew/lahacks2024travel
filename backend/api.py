@@ -29,6 +29,8 @@ def get_places():
         attraction_details['name'] = attraction['name']
         attraction_details['description'] = 'Placeholder description'
         attraction_details['image_url'] = attraction['image_url']
+        attraction_details['latitude'] = attraction['latitude']
+        attraction_details['longitude'] = attraction['longitude']
         attraction_details['city'] = attraction['city']
         places.append(attraction_details)
     result = dict()
