@@ -161,7 +161,7 @@ export default function Landing() {
                                 transform="translate(24 24)"
                                 clipPath="url(#2ade4387-9c63-4fc4-b754-10e687a0d332)"
                             >
-                                <img src="https://tailwindui.com/img/component-images/mobile-app-screenshot.png" alt="" />
+                                <img src="/mobile-app-screenshot.png" alt="" />
                             </foreignObject>
                         </svg>
                     </div>
