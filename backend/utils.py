@@ -66,3 +66,24 @@ if isinstance(attractions_info, list):
         print(f"{attraction['name']} - Rating: {attraction['rating']} - Address: {attraction['address']}")
 else:
     print(attractions_info)
+
+
+from dotenv import load_dotenv
+load_dotenv()
+import os
+import google.generativeai as genai
+
+
+google_maps_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+def get_places(num_places: int):
+    
+    pass
+
+genai.configure(api_key=gemini_api_key)
+print(google_maps_api_key)
+print(gemini_api_key)
+model = genai.GenerativeModel('gemini-1.5-pro-latest')
+response = model.generate_content(r'What is the meaning of life? respond using this JSON schema: {"meanings":[meaning1, meaning2, meaning3]}')
+print(response.text)
