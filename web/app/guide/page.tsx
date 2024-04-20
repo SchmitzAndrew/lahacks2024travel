@@ -10,64 +10,92 @@ export default function Guide() {
     // State variables to store latitude and longitude
     const [latitude, setLatitude] = useState<number | null>(null);
     const [longitude, setLongitude] = useState<number | null>(null);
+    const [address, setAddress] = useState<string | null>(null);
 
     const [places, setPlaces] = useState<any[] | null>(null);
 
-    useEffect(() => {
+    const handleAddressInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAddress(event.target.value);
+    };
+
+    const handleSearch = () => {
+        if (address) {
+            // If address is provided, fetch places based on the address
+            fetchPlaces();
+        } else {
+            // If no address is provided, get the current location
+            getLocation();
+        }
+    };
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
+    const getLocation = () => {
         if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                // Update state with the new latitude and longitude
+            navigator.geolocation.getCurrentPosition(function(position) {
                 setLatitude(position.coords.latitude);
                 setLongitude(position.coords.longitude);
-                console.log(position.coords.latitude)
-            }, function (error) {
+                // Optionally, trigger fetching places right after getting the location
+                fetchPlaces();
+            }, function(error) {
                 console.error("Error Code = " + error.code + " - " + error.message);
             });
         } else {
             console.log("Geolocation is not supported by this browser.");
         }
-    }, []);
+    };
 
-    useEffect(() => {
-        const fetchPlaces = async () => {
-            if (latitude !== null && longitude !== null) {
-                const queryParams = new URLSearchParams([
-                    ["lat", latitude.toString()],
-                    ["long", longitude.toString()],
-                    ["num_places", "5"],
-                    ["radius", "1000"]
-                ]);
 
-                const serverUrl = process.env.NEXT_PUBLIC_FLASK_URL;
-                console.log(serverUrl);
-                const response = await fetch(`${serverUrl}/places?${queryParams}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-                const data = await response.json();
-                console.log("Returned Places:")
-                console.log(data)
-                console.log(typeof data)
-                if (data.success) {
-                    setPlaces(data.places);
-                }
-            }
+
+    const fetchPlaces = async () => {
+        console.log("fetching places")
+        let queryParams = new URLSearchParams();
+        queryParams.append("num_places", "5");
+        queryParams.append("radius", "1000");
+        
+        if (address) {
+            // Send the address directly to the backend
+            queryParams.append("address", address);
+        } else if (latitude !== null && longitude !== null) {
+            queryParams.append("lat", latitude.toString());
+            queryParams.append("long", longitude.toString());
+        } else {
+            console.log("No location information available.");
+            return;
         }
-        fetchPlaces();
-    }, [latitude, longitude])
+    
 
+        const serverUrl = process.env.NEXT_PUBLIC_FLASK_URL;
+        const response = await fetch(`${serverUrl}/places?${queryParams}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        const data = await response.json();
+        if (data.success) {
+            setPlaces(data.places);
+        }
+    };
+
+    // Example usage: Call fetchPlaces when the address changes, in addition to latitude and longitude.
+    useEffect(() => {
+        fetchPlaces();
+    }, [address]);
 
 
     return (
         <>
-            <div className="bg-gray-50">
+            <div className="">
                 <Container>
                     <div>
                         <div className="flex flex-col items-center">
                             <div className="pt-6 pb-3">
-                                <AnimatedButton >
+                                <AnimatedButton onClick={getLocation}>
                                     Use My Location 🧭
                                 </AnimatedButton>
                             </div>
@@ -79,11 +107,13 @@ export default function Guide() {
                                         type="text"
                                         name="address"
                                         id="address"
-                                        className="block w-full rounded-md border-0 py-1.5 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        className="block w-full rounded-md border-0 py-1.5 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
                                         placeholder="enter your address"
+                                        onChange={handleAddressInput}
+                                        onKeyDown={handleKeyPress}
                                     />
                                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" onClick={handleSearch} />
                                     </div>
                                 </div>
                             </div>
@@ -112,3 +142,4 @@ export default function Guide() {
         </>
     );
 }
+
