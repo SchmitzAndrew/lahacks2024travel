@@ -73,6 +73,32 @@ def get_top_attractions(latitude, longitude, num_places=10, radius=10000):
     
     return attractions_info
 
+def get_directions(attractions_info):
+    print("\n\n")
+
+    place_ids = []
+    for attraction in attractions_info:
+        place_ids.insert(-1, attraction['place_id'])
+
+    # Convert Place IDs to strings
+    locations = ['place_id:' + place_id for place_id in place_ids]
+
+    # Request directions
+    directions = gmaps.directions(
+        origin=locations[0],
+        destination=locations[-1],
+        waypoints=locations[1:-1],  # Exclude origin and destination from waypoints
+        optimize_waypoints=True,    # Optimize the order of waypoints for the shortest route
+        mode="driving"              # Travel mode (driving, walking, bicycling, transit)
+    )
+
+    # Extract route information
+    best_route = directions[0]['legs']
+
+    # Print route details
+    for step in best_route:
+        print(step['start_address'], 'to', step['end_address'], ':', step['distance']['text'], '-', step['duration']['text'])
+
 
 def get_gemini_result(prompt):
     return model.generate_content(prompt).text
