@@ -52,6 +52,5 @@ def get_place_descriptions():
     result['places'] = places
     return jsonify(result)
 
-print('test')
 if __name__ == '__main__':
    app.run(port=3002, debug=True)
