@@ -39,3 +39,5 @@
 # backend 
 backend/venv
 backend/.env
+
+**.pyc
