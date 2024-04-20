@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from utils import get_top_attractions
 from flask_cors import CORS, cross_origin
 
+import os
+
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -53,4 +55,6 @@ def get_place_descriptions():
     return jsonify(result)
 
 if __name__ == '__main__':
-   app.run(port=3002, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
+
