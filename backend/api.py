@@ -32,7 +32,7 @@ def get_places():
 
 @cross_origin()
 @app.route('/placedescriptions', methods=['POST'])
-def get_places():
+def get_place_descriptions():
     latitude = request.args.get('lat')
     longitude = request.args.get('long')
     print(latitude, longitude)
