@@ -32,8 +32,15 @@ def get_location_details(address):
     }
     return location_details
 
-def get_top_attractions(latitude, longitude, num_places=10, radius=10000):
-    """Retrieve details for the top 10 attractions near a specified address."""
+def get_top_attractions(address=None, latitude=None, longitude=None, num_places=10, radius=10000):
+    """Retrieve details for the top n attractions near a specified address."""
+    if latitude is None or longitude is None:
+        if address is None:
+            return 'Failed to get destinations'
+        geocode_result = gmaps.geocode(address)
+        location = geocode_result[0]['geometry']['location']
+        latitude = location['lat']
+        longitude = location['lng']
     places_result = gmaps.places_nearby(
         location=(latitude, longitude),
         radius=radius,  # radius in meters, increased to cover more potential attractions

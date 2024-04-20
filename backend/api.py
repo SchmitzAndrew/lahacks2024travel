@@ -14,10 +14,12 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def get_places():
     latitude = request.args.get('lat')
     longitude = request.args.get('long')
+    address = request.args.get('address')
+    
     num_places = int(request.args.get('num_places'))
     radius = int(request.args.get('radius'))
-    print(latitude, longitude)
-    attractions = get_top_attractions(latitude, longitude, num_places, radius)
+
+    attractions = get_top_attractions(address, latitude, longitude, num_places, radius)
 
     success = True
     places = []
@@ -42,7 +44,6 @@ def get_description_obj(place):
 @cross_origin()
 @app.route('/placedescriptions', methods=['POST'])
 def get_place_descriptions():
-    print('started')
     places = request.json['places']
 
     success = True
