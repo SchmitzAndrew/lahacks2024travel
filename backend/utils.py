@@ -26,11 +26,11 @@ def get_location_details(address):
     }
     return location_details
 
-def get_top_attractions(latitude, longitude, num_attractions=10):
+def get_top_attractions(latitude, longitude, num_places=10, radius=10000):
     """Retrieve details for the top 10 attractions near a specified address."""
     places_result = gmaps.places_nearby(
         location=(latitude, longitude),
-        radius=10000,  # radius in meters, increased to cover more potential attractions
+        radius=radius,  # radius in meters, increased to cover more potential attractions
         type='tourist_attraction',
         rank_by='prominence'  # Sort by prominence which considers rating, relevance, and location
     )
@@ -38,7 +38,7 @@ def get_top_attractions(latitude, longitude, num_attractions=10):
     # Extract the top 10 attractions, focusing on the most relevant details
     attractions_info = []
     destinations = []
-    for place in places_result.get('results', [])[:num_attractions]:  # Collect destinations for Distance Matrix API
+    for place in places_result.get('results', [])[:num_places]:  # Collect destinations for Distance Matrix API
         if 'geometry' in place:
             lat_lng = place['geometry']['location']
             destinations.append((lat_lng['lat'], lat_lng['lng']))
@@ -50,7 +50,7 @@ def get_top_attractions(latitude, longitude, num_attractions=10):
     else:
         return 'Failed to get destinations'
 
-    for i, place in enumerate(places_result.get('results', [])[:num_attractions]):
+    for i, place in enumerate(places_result.get('results', [])[:num_places]):
         photo_reference = place['photos'][0]['photo_reference'] if 'photos' in place and place['photos'] else None
         photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={google_maps_api_key}" if photo_reference else "No image available"
         distance = distances_info[i]['distance']['text'] if distances_info[i]['status'] == 'OK' else "Distance not available"
