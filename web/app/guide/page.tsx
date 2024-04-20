@@ -30,13 +30,13 @@ export default function Guide() {
         const fetchPlaces = async () => {
             if (latitude !== null && longitude !== null) {
                 const queryParams = new URLSearchParams([
-                    ["latitude", latitude.toString()],
-                    ["longitude", longitude.toString()]
+                    ["lat", latitude.toString()],
+                    ["long", longitude.toString()]
                 ]);
                 
                 const serverUrl = process.env.NEXT_PUBLIC_FLASK_URL;
                 console.log(serverUrl);
-                const response = await fetch(`${serverUrl}/api/places?${queryParams}`, {
+                const response = await fetch(`${serverUrl}/places?${queryParams}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
