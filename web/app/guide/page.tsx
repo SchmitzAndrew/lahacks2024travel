@@ -32,8 +32,8 @@ export default function Guide() {
                 const queryParams = new URLSearchParams([
                     ["lat", latitude.toString()],
                     ["long", longitude.toString()],
-                    ["numPlaces", "5"],
-                    ["radius", "10000"]
+                    ["num_places", "5"],
+                    ["radius", "1000"]
                 ]);
 
                 const serverUrl = process.env.NEXT_PUBLIC_FLASK_URL;
@@ -60,35 +60,37 @@ export default function Guide() {
 
     return (
         <>
-            <Container>
-                <>
-                    <div>
-                        <h2> Your Starting Location </h2>
+            <div className="bg-gray-50">
+                <Container>
+                    <>
                         <div>
-                            <p>Latitude: {latitude}</p>
-                            <p>Longitude: {longitude}</p>
+                            <h2> Your Starting Location </h2>
+                            <div>
+                                <p>Latitude: {latitude}</p>
+                                <p>Longitude: {longitude}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <h2> Nearby Places </h2>
-                        {places === null ? (
-                            <p>Loading places...</p>
-                        ) : places.length > 0 ? (
-                            <ul>
-                                {places.map((place, index) => (
-                                    <li key={index} className="mb-4">
-                                        <h3 className="text-lg font-semibold">{place.name}</h3>
-                                        <img src={place.image_url} alt={place.name} className="w-full h-auto" />
-                                        <p>{place.description}</p>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p>No places found.</p>
-                        )}
-                    </div>
-                </>
-            </Container>
+                        <div>
+                            <h2 className="text-2xl font-bold pt-6 text-slate-900"> Nearby Places </h2>
+                            {places === null ? (
+                                <p>Loading places...</p>
+                            ) : places.length > 0 ? (
+                                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
+                                    {places.map((place, index) => (
+                                        <li key={index} className="mb-4 rounded-lg bg-white shadow p-3">
+                                            <h3 className="text-lg font-semibold text-slate-900">{place.name}</h3>
+                                            <img src={place.image_url} alt={place.name} className="w-full h-auto rounded-xl" />
+                                            <p>{place.description}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No places found.</p>
+                            )}
+                        </div>
+                    </>
+                </Container>
+            </div>
         </>
     );
 }
