@@ -2,21 +2,32 @@ from dotenv import load_dotenv
 import os
 import googlemaps
 import google.generativeai as genai
+from elevenlabs.client import ElevenLabs
 import json
 import requests
 import bs4
+import base64
 
 
 load_dotenv()
 
 google_maps_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
 gemini_api_key = os.getenv("GEMINI_API_KEY")
+elevenlabs_api_key = os.getenv("ELEVENLABS_API_KEY")
+
+if(google_maps_api_key is None or gemini_api_key is None or elevenlabs_api_key is None):
+    raise ValueError("API Key for Python backend missing")
 
 # Initialize API Clients
 gmaps = googlemaps.Client(key=google_maps_api_key)
 
 genai.configure(api_key=gemini_api_key)
 model = genai.GenerativeModel('gemini-1.5-pro-latest')
+
+
+elevenlabs_client = ElevenLabs(
+  api_key=elevenlabs_api_key
+)
 
 def get_location_details(address):
     """Retrieve basic location details including formatted address, latitude, and longitude."""
@@ -42,7 +53,7 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
         latitude = location['lat']
         longitude = location['lng']
     else:
-        geocode_result = gmaps.reverse_geocode((longitude, lat))
+        geocode_result = gmaps.reverse_geocode((longitude, latitude))
     places_result = gmaps.places_nearby(
         location=(latitude, longitude),
         radius=radius,  # radius in meters, increased to cover more potential attractions
@@ -124,6 +135,20 @@ def scrape_website(url: str) -> str:
     soup = bs4.BeautifulSoup(response.text,'lxml')
 
     return soup.body.get_text(' ', strip=True)
+
+
+def text_to_speech_base64(text: str)->str:
+    audio = elevenlabs_client.generate(
+    text=text,
+    voice="Daniel",
+    model="eleven_multilingual_v2"
+    )
+    with open("temp/temp.wav", "wb") as f:
+        f.write(audio)
+    enc = base64.b64encode(open("file.wav", "rb").read())
+    return enc
+
+
 
 #process_gemini_json(get_gemini_result(r'What is the meaning of life? respond using this JSON schema: {"meanings":[meaning1, meaning2, meaning3]}'))
 #print(scrape_website('https://en.wikipedia.org/wiki/University_of_California,_Los_Angeles'))
