@@ -2,15 +2,21 @@ from dotenv import load_dotenv
 import os
 import googlemaps
 import google.generativeai as genai
+import json
+import requests
+import bs4
 
-# Load environment variables
+
 load_dotenv()
 
-# Retrieve the API key from the environment
 google_maps_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+gemini_api_key = os.getenv("GEMINI_API_KEY")
 
-# Initialize the Google Maps client with your API key
+# Initialize API Clients
 gmaps = googlemaps.Client(key=google_maps_api_key)
+
+genai.configure(api_key=gemini_api_key)
+model = genai.GenerativeModel('gemini-1.5-pro-latest')
 
 def get_location_details(address):
     """Retrieve basic location details including formatted address, latitude, and longitude."""
@@ -35,7 +41,7 @@ def get_top_attractions(latitude, longitude, num_places=10, radius=10000):
         rank_by='prominence'  # Sort by prominence which considers rating, relevance, and location
     )
     
-    # Extract the top 10 attractions, focusing on the most relevant details
+    # Extract the top n attractions, focusing on the most relevant details
     attractions_info = []
     destinations = []
     for place in places_result.get('results', [])[:num_places]:  # Collect destinations for Distance Matrix API
@@ -67,16 +73,29 @@ def get_top_attractions(latitude, longitude, num_places=10, radius=10000):
     
     return attractions_info
 
-google_maps_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
-gemini_api_key = os.getenv("GEMINI_API_KEY")
 
-def get_places(num_places: int):
-    
-    pass
+def get_gemini_result(prompt):
+    return model.generate_content(prompt).text
+
+def process_gemini_json(gemini_json: str)->object:
+    return json.loads(gemini_json.replace('```', '').replace('json', ''))
+
+
+def scrape_website(url: str) -> str:
+    response = requests.get(url,headers={'User-Agent': 'Mozilla/5.0'})
+    if not response.ok:
+        return ''
+    soup = bs4.BeautifulSoup(response.text,'lxml')
+
+    return soup.body.get_text(' ', strip=True)
+
+#process_gemini_json(get_gemini_result(r'What is the meaning of life? respond using this JSON schema: {"meanings":[meaning1, meaning2, meaning3]}'))
+#print(scrape_website('https://en.wikipedia.org/wiki/University_of_California,_Los_Angeles'))
+
 """
-genai.configure(api_key=gemini_api_key)
+
 print(google_maps_api_key)
 print(gemini_api_key)
-model = genai.GenerativeModel('gemini-1.5-pro-latest')
+
 response = model.generate_content(r'What is the meaning of life? respond using this JSON schema: {"meanings":[meaning1, meaning2, meaning3]}')
 print(response.text)"""
