@@ -106,21 +106,25 @@ export default function Guide() {
             return
         }
 
-        if(places === null){
-            return
-        }
+        
         const descriptions_response = await fetch(`${serverUrl}/places?${queryParams}`, {
             method: "POST",
-            body: JSON.stringify({'places': places.map((place) => ({'id': place['id'], 'name': place['name']}))}),
+            body: JSON.stringify({'places': places_data.places.map((place_datum: any) => ({'id': place_datum['id'], 'name': place_datum['name']}))}),
             headers: {
                 "Content-Type": "application/json"
             }
         });
-
+        
         const descriptions_data = await descriptions_response.json();
+        console.log("Descriptions", descriptions_data)
         if (descriptions_data.success) {
+            const descriptionsList:any[] = []
+            for(let description_datum of descriptions_data.content) {
+                descriptionsList.push(description_datum['description'])
+            }
+            setPlaces(places_data.places.map((place_datum: place) => {place_datum['description'] = descriptionsList[place_datum['id']]; return place_datum}))
             //setPlaces(descriptions_data.places as place[]);
-            console.log("Descriptions", descriptions_data.places)
+            
         } else {
             console.log('Error fetching descriptions')
             return
