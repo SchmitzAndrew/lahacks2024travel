@@ -6,6 +6,8 @@ import AnimatedButton from "@/components/ui/AnimatedButton";
 
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 
+import DescriptionDropdown from "@/components/ux/DescriptionDropdown";
+
 import Map from "@/components/ui/Map";
 
 interface place {
@@ -184,7 +186,7 @@ export default function Guide() {
                                                         <Map centerLatitude={latitude} centerLongitude={longitude} placeLatitude={place.latitude} placeLongitude={place.longitude} />
                                                         </>
                                                     )}
-                                                    <p>{place.description}</p>
+                                                    <DescriptionDropdown description={place.description || ""} />
                                                     <p className="text-sm text-blue-700">Featured Place</p>
                                                 </li>
                                             ) : (
