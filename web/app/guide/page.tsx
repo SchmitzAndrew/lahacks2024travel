@@ -8,6 +8,16 @@ import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon
 
 import Map from "@/components/ui/Map";
 
+interface place {
+    id: number
+    name: string
+    description: string | undefined
+    latitude: number
+    longitude: number
+    image_url: string
+    city: string
+}
+
 export default function Guide() {
     // State variables to store latitude and longitude
     const [latitude, setLatitude] = useState<number | null>(null);
@@ -15,7 +25,7 @@ export default function Guide() {
     const [address, setAddress] = useState<string | null>(null);
 
     
-    const [places, setPlaces] = useState<any[] | null>(null);
+    const [places, setPlaces] = useState<place[] | null>(null);
     const [isLoadingLocation, setIsLoadingLocation] = useState(true);
 
     const handleAddressInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,7 +152,7 @@ export default function Guide() {
                                                     {!isLoadingLocation && latitude !== null && longitude !== null && (
                                                         <>
                                                         <p>{place.latitude}</p>
-                                                        <p>{place.placeLongitude}</p>
+                                                        <p>{place.longitude}</p>
                                                         <Map centerLatitude={latitude} centerLongitude={longitude} placeLatitude={place.latitude} placeLongitude={place.longitude} />
                                                         </>
                                                     )}
