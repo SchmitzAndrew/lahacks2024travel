@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from utils import get_top_attractions, get_gemini_result
+from utils import get_top_attractions, get_gemini_result, text_to_speech_base64
 from flask_cors import CORS, cross_origin
 import concurrent.futures
 import os
@@ -66,7 +66,20 @@ def get_place_descriptions():
     
     return jsonify(result)
 
+
+@cross_origin()
+@app.route('/generatetts', methods=['POST'])
+def generate_tts():
+    text = request.json['text']
+
+    success = True
+    base64_speech = text_to_speech_base64(text)
+    
+    result = {'success': success, 'content': base64_speech}
+    
+    return jsonify(result)
+
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000)) 
     app.run(host='0.0.0.0', port=port, debug=bool(os.environ.get('BACKEND_DEBUG', False)))
-
