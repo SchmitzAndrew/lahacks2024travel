@@ -185,7 +185,7 @@ export default function Guide() {
                 <div>
                   <h2 className="text-2xl font-bold pt-6 text-slate-900">
                     {" "}
-                    Nearby Places{" "}
+                    Your Destinations{" "}
                   </h2>
                   <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
                     {places.map((place, index) =>
