@@ -1,3 +1,4 @@
+from typing import List
 from dotenv import load_dotenv
 import os
 import googlemaps
@@ -8,6 +9,7 @@ import json
 import requests
 import bs4
 import base64
+import wikipedia
 
 
 load_dotenv()
@@ -126,11 +128,51 @@ def get_directions(attractions_info):
         print(step['start_address'], 'to', step['end_address'], ':', step['distance']['text'], '-', step['duration']['text'])
 
 
-def get_gemini_result(prompt):
+def get_gemini_result(prompt: str):
     return model.generate_content(prompt).text
 
-def process_gemini_json(gemini_json: str)->object:
+def process_gemini_json(gemini_json: str) -> object:
     return json.loads(gemini_json.replace('```', '').replace('json', ''))
+
+# Gets the body text of the relevant wikipedia article
+def scrape_place_wikipedia(place: str) -> str:
+    place_page = wikipedia.page(place)
+    return f'The following is a wikipedia article on {place_page.title}: \n {place_page.content}'
+
+
+def get_proompt(places: List[object]) -> str:
+    proompt = ''
+    with open('proompt.txt', 'r') as proompt_base_file:
+        proompt_base = proompt_base_file.read()
+    
+    proompt += proompt_base
+
+    # Demonstrate JSON formatting
+    proompt += r'{'
+    proompt += 'success: true,'
+    proompt += 'content: ['
+    for place in places:
+        place_id = place['id']
+        place_name = place['name']
+        proompt += '{'
+        proompt += f'"id": {place_id}, "name": {place_name}, "description": "generated description goes here"'
+        proompt += '}'
+    proompt = proompt[:-1] # Remove trailing comma
+    proompt += ']'
+    proompt += r'}'
+
+    proompt += "The following are the relevant locations in order:\n"
+    place_names = [place['name'] for place in places]
+    # Add all places to proompt in order
+    for place_name in place_names:
+        proompt += place_name + '\n'
+    
+    proompt += 'The following are wikipedia articles that may contain relevant information:\n'
+    
+    for place in places:
+        place_name = place['name']
+        proompt += scrape_place_wikipedia(place_name)
+    return proompt
 
 
 def scrape_website(url: str) -> str:
