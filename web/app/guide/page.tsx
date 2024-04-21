@@ -72,6 +72,14 @@ export default function Guide() {
         }
     };
 
+    function goNextPlace() {
+        if(places === null)
+            return
+        setLatitude(places[0]['latitude'])
+        setLongitude(places[0]['longitude'])
+        setPlaces(places.slice(1))
+    }
+
     const fetchPlaces = async (latitude: string | undefined, longitude: string | undefined, address: string | undefined) => {
         console.log("fetching places");
         let queryParams = new URLSearchParams();
@@ -211,6 +219,7 @@ export default function Guide() {
                                                             </>
                                                         )}
                                                     <DescriptionDropdown description={place.description || ""} />
+                                                    <button onClick={goNextPlace}>Next Place</button>
                                                 </li>
                                             ) : (
                                                 // Render other elements
