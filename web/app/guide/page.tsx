@@ -103,7 +103,7 @@ export default function Guide() {
             
         } else {
             console.log('Error fetching places')
-            return
+            return;
         }
 
         
@@ -127,7 +127,7 @@ export default function Guide() {
             
         } else {
             console.log('Error fetching descriptions')
-            return
+            return;
         }
 
     };
