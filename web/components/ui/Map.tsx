@@ -79,7 +79,7 @@ function Directions({ centerLatitude, centerLongitude, placeLatitude, placeLongi
                 directionsRenderer.setDirections(response);
                 
             });
-    }, [directionsService, directionsRenderer]);
+    }, [centerLatitude, centerLongitude, placeLatitude, placeLongitude, directionsService, directionsRenderer]);
 
     return null;
 }

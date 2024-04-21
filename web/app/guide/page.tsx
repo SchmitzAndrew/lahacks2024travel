@@ -36,7 +36,6 @@ export default function Guide() {
     const handleSearch = () => {
         if (addressState !== null) {
             // If address is provided, fetch places based on the address
-            //console.error('TODO')
             fetchPlaces(undefined, undefined, addressState);
         } else {
             // If no address is provided, get the current location
@@ -107,7 +106,10 @@ export default function Guide() {
         const places_data = await places_response.json();
         if (places_data.success) {
             setPlaces(places_data.places as place[]);
-
+            if(latitudeState === null)
+                setLatitude(places_data.places[0]['latitude'] - 0.01)
+            if(longitudeState === null)
+                setLongitude(places_data.places[0]['longitude'] + 0.005)
             console.log("Places", places_data.places);
         } else {
             console.log("Error fetching places");
@@ -206,8 +208,7 @@ export default function Guide() {
                                                     <h3 className="text-xl pb-1 font-semibold text-slate-900">
                                                         {place.name}
                                                     </h3>
-                                                    {!isLoadingLocation &&
-                                                        latitudeState !== null &&
+                                                    {   latitudeState !== null &&
                                                         longitudeState !== null && (
                                                             <>
                                                                 <Map
