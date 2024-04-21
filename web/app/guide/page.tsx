@@ -127,14 +127,8 @@ export default function Guide() {
             return;
         }
         
-        console.log(JSON.stringify({
-            places: places_data.places.map((place_datum: any) => ({
-                id: place_datum["id"],
-                name: place_datum["name"],
-                language: language,
-                kids_mode: kidsModeEnabled
-            })),
-        }));
+        console.log("Kids mode: ", kidsModeEnabled)
+        console.log("Language: ", language)
         const descriptions_response = await fetch(
             `${serverUrl}/placedescriptionsv2?${queryParams}`,
             {
@@ -152,14 +146,7 @@ export default function Guide() {
                 },
             }
         );
-        console.log(JSON.stringify({
-            places: places_data.places.map((place_datum: any) => ({
-                id: place_datum["id"],
-                name: place_datum["name"],
-                language: language,
-                kids_mode: kidsModeEnabled
-            })),
-        }));
+        
 
         const descriptions_data = await descriptions_response.json();
         console.log("Descriptions", descriptions_data);
