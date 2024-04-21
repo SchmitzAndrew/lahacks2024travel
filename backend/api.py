@@ -104,9 +104,16 @@ def get_place_descriptionsv2():
     print(data)  # Assuming this prints the entire request body
     places = data['places']
     
-    # Access 'kids_mode' and 'language' directly from data, not from places
-    kids_mode = data.get('kids_mode', False)
-    language = data.get('language', 'English')
+    # Assuming all places have the same language and kids_mode,
+    # we can extract these values from the first item in the list
+    if places:  # Check if the list is not empty
+        first_place = places[0]
+        kids_mode = first_place.get('kids_mode')
+        language = first_place.get('language')
+    else:
+        # Default values if places is empty
+        kids_mode = False
+        language = 'English'
 
     
 
