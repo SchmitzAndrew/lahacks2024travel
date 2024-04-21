@@ -14,7 +14,9 @@ export default function Guide() {
     const [longitude, setLongitude] = useState<number | null>(null);
     const [address, setAddress] = useState<string | null>(null);
 
+    
     const [places, setPlaces] = useState<any[] | null>(null);
+    const [isLoadingLocation, setIsLoadingLocation] = useState(true);
 
     const handleAddressInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAddress(event.target.value);
@@ -39,15 +41,21 @@ export default function Guide() {
     const getLocation = () => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(function (position) {
+                
                 setLatitude(position.coords.latitude);
                 setLongitude(position.coords.longitude);
+                
+
+                setIsLoadingLocation(false); // Update loading state here
                 // Optionally, trigger fetching places right after getting the location
                 fetchPlaces();
             }, function (error) {
                 console.error("Error Code = " + error.code + " - " + error.message);
+                setIsLoadingLocation(false); // Update loading state in case of error as well
             });
         } else {
             console.log("Geolocation is not supported by this browser.");
+            setIsLoadingLocation(false); // Update loading state if geolocation is not supported
         }
     };
 
@@ -63,6 +71,7 @@ export default function Guide() {
         } else if (latitude !== null && longitude !== null) {
             queryParams.append("lat", latitude.toString());
             queryParams.append("long", longitude.toString());
+            
         } else {
             console.log("No location information available.");
             return;
@@ -79,6 +88,7 @@ export default function Guide() {
         const data = await response.json();
         if (data.success) {
             setPlaces(data.places);
+            console.log("Places", data.places)
         }
     };
 
@@ -119,7 +129,9 @@ export default function Guide() {
                                     <span className="hidden">Loading places...</span>
                                 </div>
                             ) : places.length > 0 ? (
+                               
                                 <div>
+                                     
                                     <h2 className="text-2xl font-bold pt-6 text-slate-900"> Nearby Places </h2>
                                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
                                         {places.map((place, index) => (
@@ -127,7 +139,13 @@ export default function Guide() {
                                                 // Render the first element differently
                                                 <li key={index} className="mb-4 rounded-lg bg-blue-100 shadow p-3">
                                                     <h3 className="text-lg font-semibold text-slate-900">{place.name}</h3>
-                                                    <Map centerLatitude={latitude} centerLongitude={longitude}  placeLatitude={place.placeLatitude} placeLongitude={place.placeLongitude} />
+                                                    {!isLoadingLocation && latitude !== null && longitude !== null && (
+                                                        <>
+                                                        <p>{place.latitude}</p>
+                                                        <p>{place.placeLongitude}</p>
+                                                        <Map centerLatitude={latitude} centerLongitude={longitude} placeLatitude={place.latitude} placeLongitude={place.longitude} />
+                                                        </>
+                                                    )}
                                                     <p>{place.description}</p>
                                                     <p className="text-sm text-blue-700">Featured Place</p>
                                                 </li>
