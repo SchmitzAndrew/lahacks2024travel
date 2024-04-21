@@ -17,6 +17,10 @@ interface IntroProps {
 
 export default function Intro({ centerLongitude, centerLatitude, placeLongitude, placeLatitude }: IntroProps) {
     const position = { lat: centerLatitude, lng: centerLongitude };
+    console.log(centerLongitude)
+    console.log(centerLatitude)
+    console.log(placeLongitude)
+    console.log(placeLatitude)
     
 
     return (
@@ -50,10 +54,7 @@ function Directions({ centerLatitude, centerLongitude, placeLatitude, placeLongi
     const routesLibrary = useMapsLibrary("routes");
     const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService>();
     const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer>();
-    const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
-    const [routeIndex, setRouteIndex] = useState(0);
-    const selected = routes[routeIndex];
-    const leg = selected?.legs[0];
+    
 
     useEffect(() => {
         if (!routesLibrary || !map) return;
@@ -63,38 +64,24 @@ function Directions({ centerLatitude, centerLongitude, placeLatitude, placeLongi
 
     useEffect(() => {
         if (!directionsService || !directionsRenderer) return;
-        console.log("latitudeCenter", centerLatitude)
-        console.log("longitudeCenter", centerLongitude)
-        console.log("latitudePlace", placeLatitude)
-        console.log("longitudePlace", placeLongitude)
 
         directionsService
             .route({
                 origin: new google.maps.LatLng(centerLatitude, centerLongitude),
+                
                 destination: new google.maps.LatLng(placeLatitude, placeLongitude),
                 travelMode: google.maps.TravelMode.WALKING,
                 provideRouteAlternatives: false,
             })
             .then((response) => {
+                console.log("PRINT")
+                console.log(new google.maps.LatLng(centerLatitude, centerLongitude))
+                console.log(new google.maps.LatLng(placeLatitude, placeLongitude))
                 directionsRenderer.setDirections(response);
-                setRoutes(response.routes);
+                
             });
     }, [directionsService, directionsRenderer]);
-    console.log(directionsService)
-    console.log(directionsRenderer)
 
-    if (!leg) return null;
-
-    return (
-        <div className="directions">
-            <h2>[selected.summary]</h2>
-            <p>
-                {leg.start_address.split(",")[0]} to {leg.end_address.split(",")[0]}
-            </p>
-            <p>Distance: {leg.distance?.text}</p>
-            <p>Distance: {leg.duration?.text}</p>
-
-            
-        </div>
-    );
+    return null;
 }
+
