@@ -52,12 +52,12 @@ export default function Container({ children}: ContainerProps) {
                                             <img
                                                 className="block h-8 w-auto lg:hidden"
                                                 src="/logo.png"
-                                                alt="Travel Buddy"
+                                                alt="Hermes"
                                             />
                                             <img
                                                 className="hidden h-8 w-auto lg:block"
                                                 src="/logo.png"
-                                                alt="Travel Buddy"
+                                                alt="Hermes"
                                             />
                                         </div>
                                         <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
