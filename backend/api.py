@@ -112,6 +112,8 @@ def get_place_descriptionsv2():
         kids_mode = request.json['kids_mode']
         kids_mode = bool(kids_mode)
 
+    print('Kids mode enabled: ', kids_mode)
+
     prompt = get_proompt(places, language, kids_mode)
     result = process_gemini_json(get_gemini_result(prompt))
     return jsonify(result)
