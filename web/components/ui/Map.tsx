@@ -29,9 +29,8 @@ export default function Intro({ centerLongitude, centerLatitude, placeLongitude,
                 apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS!}
             >
                 <Map
-                    center={position}
-                    zoom={14}
-
+                    defaultCenter={position}
+                    defaultZoom={14}
                 >
                     {/* other components or code here */}
                     <Directions centerLatitude={centerLatitude} centerLongitude={centerLongitude} placeLatitude={placeLatitude} placeLongitude={placeLongitude} />

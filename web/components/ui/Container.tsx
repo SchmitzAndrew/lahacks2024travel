@@ -51,13 +51,13 @@ export default function Container({ children}: ContainerProps) {
                                         <div className="flex flex-shrink-0 items-center">
                                             <img
                                                 className="block h-8 w-auto lg:hidden"
-                                                src="https://tailwindui.com/img/logos/mark.svg?color=green&shade=600"
-                                                alt="Your Company"
+                                                src="/logo.png"
+                                                alt="Travel Buddy"
                                             />
                                             <img
                                                 className="hidden h-8 w-auto lg:block"
-                                                src="https://tailwindui.com/img/logos/mark.svg?color=green&shade=600"
-                                                alt="Your Company"
+                                                src="/logo.png"
+                                                alt="Travel Buddy"
                                             />
                                         </div>
                                         <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">

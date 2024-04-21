@@ -24,8 +24,8 @@ export default function Landing() {
                             <span className="sr-only">Travel Buddy</span>
                             <img
                                 className="h-8 w-auto"
-                                src="https://tailwindui.com/img/logos/mark.svg?color=green&shade=600"
-                                alt=""
+                                src="/logo.png"
+                                alt="Travel Buddy"
                             />
                         </a>
                     </div>
@@ -60,8 +60,8 @@ export default function Landing() {
                                 <span className="sr-only">Travel Buddy</span>
                                 <img
                                     className="h-8 w-auto"
-                                    src="https://tailwindui.com/img/logos/mark.svg?color=green&shade=600"
-                                    alt=""
+                                    src="/logo.png"
+                                    alt="Travel Buddy"
                                 />
                             </a>
                             <button

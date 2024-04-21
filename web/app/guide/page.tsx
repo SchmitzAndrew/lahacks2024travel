@@ -98,15 +98,17 @@ export default function Guide() {
         const places_data = await places_response.json();
         if (places_data.success) {
             setPlaces(places_data.places as place[]);
+
             console.log("Places", places_data.places)
+            
         } else {
             console.log('Error fetching places')
             return
         }
 
-        if(places === null)
+        if(places === null){
             return
-
+        }
         const descriptions_response = await fetch(`${serverUrl}/places?${queryParams}`, {
             method: "POST",
             body: JSON.stringify({'places': places.map((place) => ({'id': place['id'], 'name': place['name']}))}),
