@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dotenv import load_dotenv
 import os
 import googlemaps
@@ -201,7 +201,8 @@ def scrape_place_wikipedia(place: str) -> str:
     return f'The following is a wikipedia article on {place_page.title}: \n {place_page.content}'
 
 
-def get_proompt(places: List[object]) -> str:
+def get_proompt(places: List[object], language: Optional[str], kids_mode: Optional[bool]) -> str:
+    print('language', language)
     proompt = ''
     with open('proompt.txt', 'r') as proompt_base_file:
         proompt_base = proompt_base_file.read()
@@ -221,7 +222,11 @@ def get_proompt(places: List[object]) -> str:
     proompt = proompt[:-1] # Remove trailing comma
     proompt += ']'
     proompt += r'}'
-
+    if language is not None:
+        print(language)
+        proompt += f'The output should be in the language: {language}\n'
+    if kids_mode is not None and kids_mode:
+        proompt += f'The output should be especially child-friendly and fun\n'
     proompt += "The following are the relevant locations in order:\n"
     place_names = [place['name'] for place in places]
     # Add all places to proompt in order
