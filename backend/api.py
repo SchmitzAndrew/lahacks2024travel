@@ -106,14 +106,15 @@ def get_place_descriptionsv2():
     kids_mode = data.get('kids_mode', False)
     language = data.get('language', 'English')
 
-    # language = None
-    # if 'language' in data:
-    #     language = request.json['language']
+    testLanguage = None
+    if 'language' in data:
+        language = request.json['language']
     
-    # kids_mode = None
-    # if 'kids_mode' in data:
-    #     kids_mode = request.json['kids_mode']
-    #     kids_mode = bool(kids_mode)
+    testKidsMode = None
+    if 'kids_mode' in data:
+        kids_mode = request.json['kids_mode']
+        kids_mode = bool(kids_mode)
+    print('Test Vars: ', testLanguage, testKidsMode)
 
     print('Kids mode enabled: ', kids_mode)
     print("Language on server: ", language)
