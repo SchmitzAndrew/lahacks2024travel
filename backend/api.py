@@ -102,6 +102,7 @@ def get_place_descriptions():
 def get_place_descriptionsv2():
     places = request.json['places']
     data = request.json
+    print(data)
     kids_mode = request.json['kids_mode']
     language = request.json['language']
 
