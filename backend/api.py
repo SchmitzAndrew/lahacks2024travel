@@ -73,16 +73,10 @@ def get_place_descriptions():
 def get_place_descriptionsv2():
     places = request.json['places']
 
-    success = True
-    descriptions = []
-
     prompt = get_proompt(places)
-    with open('prompt.txt', 'w') as f:
-        f.write(prompt)
     result = process_gemini_json(get_gemini_result(prompt))
-    print(prompt)
+
     return result
-    # return jsonify(result)
 
 
 @cross_origin()
