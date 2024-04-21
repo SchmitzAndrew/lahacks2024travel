@@ -75,8 +75,7 @@ def get_place_descriptionsv2():
 
     prompt = get_proompt(places)
     result = process_gemini_json(get_gemini_result(prompt))
-
-    return result
+    return jsonify(result)
 
 
 @cross_origin()
