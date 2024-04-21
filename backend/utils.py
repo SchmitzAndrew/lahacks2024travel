@@ -3,6 +3,7 @@ import os
 import googlemaps
 import google.generativeai as genai
 from elevenlabs.client import ElevenLabs
+from elevenlabs import save
 import json
 import requests
 import bs4
@@ -139,14 +140,13 @@ def scrape_website(url: str) -> str:
 
 def text_to_speech_base64(text: str)->str:
     audio = elevenlabs_client.generate(
-    text=text,
-    voice="Daniel",
-    model="eleven_multilingual_v2"
-    )
-    with open("temp/temp.wav", "wb") as f:
-        f.write(audio)
-    enc = base64.b64encode(open("file.wav", "rb").read())
-    return enc
+        text=text,
+        voice="Daniel",
+        model="eleven_multilingual_v2"
+        )
+    save(audio, "temp/temp.mp3")
+    enc = str(base64.b64encode(open("temp/temp.mp3", "rb").read()))[2:][:-1]
+    return str(enc)
 
 
 
