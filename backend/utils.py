@@ -86,6 +86,8 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
         photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={google_maps_api_key}" if photo_reference else "No image available"
         distance = distances_info[i]['distance']['text'] if distances_info[i]['status'] == 'OK' else "Distance not available"
         city = place['vicinity'].split(', ')[-1]
+        place_location = place['geometry']['location']
+        print(place)
         attraction_details = {
             'name': place.get('name'),
             'type': ', '.join(place.get('types', ['Not specified'])),
@@ -94,8 +96,8 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
             'city': city,
             'distance': distance,
             'image_url': photo_url,
-            'latitude': latitude,
-            'longitude': longitude
+            'latitude': place_location['lat'],
+            'longitude': place_location['lng']
         }
         attractions_info.append(attraction_details)
     print('test')
