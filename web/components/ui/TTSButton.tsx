@@ -18,25 +18,14 @@ export default function TTSButton({text}: TTSButtonProps) {
         let parsedResponse = await response.json()
 
         const base64Audio = parsedResponse['content']
-        //const base64Audio = "YOUR_BASE64_ENCODED_AUDIO_STRING_HERE";
+        const binaryAudio = atob(base64Audio);
+        const blob = new Blob([new Uint8Array([...binaryAudio].map(char => char.charCodeAt(0)))]);
 
-// Decode the base64 string to binary data
-const binaryAudio = atob(base64Audio);
+        const objectURL = URL.createObjectURL(blob);
+        const audio = new Audio();
+        audio.src = objectURL;
 
-// Convert the binary data to a Blob object
-const blob = new Blob([new Uint8Array([...binaryAudio].map(char => char.charCodeAt(0)))]);
-
-// Create an object URL from the Blob
-const objectURL = URL.createObjectURL(blob);
-
-// Create an <audio> element
-const audio = new Audio();
-
-// Set the src attribute to the object URL
-audio.src = objectURL;
-
-// Play the audio
-audio.play();
+        audio.play();
     }
 
     return (<>
