@@ -100,24 +100,15 @@ def get_place_descriptions():
 @cross_origin()
 @app.route('/placedescriptionsv2', methods=['POST'])
 def get_place_descriptionsv2():
-    places = request.json['places']
     data = request.json
-    print(data)
+    print(data)  # Assuming this prints the entire request body
+    places = data['places']
+    
+    # Access 'kids_mode' and 'language' directly from data, not from places
     kids_mode = data.get('kids_mode', False)
     language = data.get('language', 'English')
 
-    testLanguage = None
-    if 'language' in data:
-        language = request.json['language']
     
-    testKidsMode = None
-    if 'kids_mode' in data:
-        kids_mode = request.json['kids_mode']
-        kids_mode = bool(kids_mode)
-    print('Test Vars: ', testLanguage, testKidsMode)
-
-    print('Kids mode enabled: ', kids_mode)
-    print("Language on server: ", language)
 
     prompt = get_proompt(places, language, kids_mode)
     result = process_gemini_json(get_gemini_result(prompt))
