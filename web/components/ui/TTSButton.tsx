@@ -3,7 +3,7 @@
 interface TTSButtonProps {
     text: string
 }
-export default function TTSButton({text}: TTSButtonProps) {
+export default function TTSButton({ text }: TTSButtonProps) {
     async function playTTS() {
         const serverUrl = process.env.NEXT_PUBLIC_FLASK_URL;
         const response = await fetch(`${serverUrl}/generatetts`, {
@@ -33,7 +33,11 @@ export default function TTSButton({text}: TTSButtonProps) {
         audio.play();
     }
 
-    return (<>
-        <button onClick={playTTS}>TTS Button</button>
-    </>)
+    return (
+    <div className="flex justify-center pt-3 pb-2">
+        <button onClick={playTTS} className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+            Listen to this Description🔊
+        </button>
+    </div>
+    )
 }

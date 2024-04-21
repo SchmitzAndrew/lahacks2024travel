@@ -6,8 +6,7 @@ import os
 import googlemaps.exceptions
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
 
 @cross_origin()
 @app.route('/places', methods=['GET'])

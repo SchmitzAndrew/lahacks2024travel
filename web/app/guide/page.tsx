@@ -6,6 +6,8 @@ import AnimatedButton from "@/components/ui/AnimatedButton";
 
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 
+import DescriptionDropdown from "@/components/ux/DescriptionDropdown";
+
 import Map from "@/components/ui/Map";
 
 interface place {
