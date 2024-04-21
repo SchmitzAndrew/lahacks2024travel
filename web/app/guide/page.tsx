@@ -5,10 +5,13 @@ import Container from "@/components/ui/Container";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
+import Cog8ToothIcon from "@heroicons/react/24/outline/Cog8ToothIcon";
 
 import DescriptionDropdown from "@/components/ux/DescriptionDropdown";
 
 import Map from "@/components/ui/Map";
+
+import { Switch } from '@headlessui/react'
 
 interface place {
     id: number;
@@ -27,7 +30,15 @@ export default function Guide() {
     const [addressState, setAddress] = useState<string | null>(null);
 
     const [places, setPlaces] = useState<place[] | null>(null);
+    const [enabled, setEnabled] = useState(false)
     const [isLoadingLocation, setIsLoadingLocation] = useState(true);
+
+    const [language, setLanguage] = useState("English");
+    const [kidsModeEnabled, setKidsModeEnabled] = useState(false);
+
+    function classNames(...classes: any[]) {
+        return classes.filter(Boolean).join(' ')
+    }
 
     const handleAddressInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAddress(event.target.value);
@@ -73,7 +84,7 @@ export default function Guide() {
     };
 
     function goNextPlace() {
-        if(places === null)
+        if (places === null)
             return
         setLatitude(places[0]['latitude'])
         setLongitude(places[0]['longitude'])
@@ -122,6 +133,8 @@ export default function Guide() {
                     places: places_data.places.map((place_datum: any) => ({
                         id: place_datum["id"],
                         name: place_datum["name"],
+                        language: language,
+                        kids_mode: kidsModeEnabled
                     })),
                 }),
                 headers: {
@@ -156,35 +169,80 @@ export default function Guide() {
                 <Container>
                     <div>
                         {places === null ? (
-                            <div className="flex flex-col items-center">
-                                <div className="pt-6 pb-3">
-                                    <AnimatedButton onClick={useMyLocation}>
-                                        Use My Location 🧭
-                                    </AnimatedButton>
-                                </div>
+                            <>
+                                <div className="flex flex-col items-center">
+                                    <div className="pt-6 pb-3">
+                                        <AnimatedButton onClick={useMyLocation}>
+                                            Use My Location 🧭
+                                        </AnimatedButton>
+                                    </div>
 
-                                <p className=" text-gray-700">-or-</p>
-                                <div>
-                                    <div className="relative mt-2 rounded-md shadow-sm">
-                                        <input
-                                            type="text"
-                                            name="address"
-                                            id="address"
-                                            className="block w-full rounded-md border-0 py-1.5 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
-                                            placeholder="enter your address"
-                                            onChange={handleAddressInput}
-                                            onKeyDown={handleKeyPress}
-                                        />
-                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                            <MagnifyingGlassIcon
-                                                className="h-5 w-5 text-gray-400"
-                                                aria-hidden="true"
-                                                onClick={handleSearch}
+                                    <p className=" text-gray-700">-or-</p>
+                                    <div>
+                                        <div className="relative mt-2 rounded-md shadow-sm">
+                                            <input
+                                                type="text"
+                                                name="address"
+                                                id="address"
+                                                className="block w-full rounded-md border-0 py-1.5 pr-6 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                                                placeholder="enter your address"
+                                                onChange={handleAddressInput}
+                                                onKeyDown={handleKeyPress}
                                             />
+                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                <MagnifyingGlassIcon
+                                                    className="h-5 w-5 text-gray-400"
+                                                    aria-hidden="true"
+                                                    onClick={handleSearch}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div className="pt-8">
+                                    <h2 className="text-xl font-semibold pb-4">Settings⚙️</h2>
+                                    <Switch.Group as="div" className="flex items-center">
+                                        <Switch
+                                            checked={kidsModeEnabled}
+                                            onChange={setKidsModeEnabled}
+                                            className={classNames(
+                                                kidsModeEnabled ? 'bg-green-600' : 'bg-gray-200',
+                                                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2'
+                                            )}
+                                        >
+                                            <span
+                                                aria-hidden="true"
+                                                className={classNames(
+                                                    kidsModeEnabled ? 'translate-x-5' : 'translate-x-0',
+                                                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                                                )}
+                                            />
+                                        </Switch>
+                                        <Switch.Label as="span" className="ml-3 text-sm">
+                                            <span className="font-medium text-gray-900">Enable Kids Mode</span>{' '}
+
+                                        </Switch.Label>
+                                    </Switch.Group>
+
+                                    <div className="pt-4">
+                                        <label htmlFor="language" className="block  font-medium leading-6 text-gray-900">
+                                            Language
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                type="language"
+                                                name="language"
+                                                id="language"
+                                                className="block w-1/2 pl-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                placeholder="English"
+                                                value={language}
+                                                onChange={(e) => setLanguage(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </>
                         ) : (
                             <></>
                         )}
