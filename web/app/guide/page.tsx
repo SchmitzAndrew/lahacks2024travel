@@ -107,7 +107,7 @@ export default function Guide() {
         }
 
         
-        const descriptions_response = await fetch(`${serverUrl}/places?${queryParams}`, {
+        const descriptions_response = await fetch(`${serverUrl}/placedescriptionsv2?${queryParams}`, {
             method: "POST",
             body: JSON.stringify({'places': places_data.places.map((place_datum: any) => ({'id': place_datum['id'], 'name': place_datum['name']}))}),
             headers: {
