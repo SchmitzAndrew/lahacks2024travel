@@ -103,6 +103,65 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
     print('test')
     return attractions_info
 
+
+def get_top_attractions_gemini(address=None, latitude=None, longitude=None, num_places=10, radius=10000):
+    """Retrieve details for the top n attractions near a specified address."""
+
+    if latitude is None or longitude is None:
+        if address is None:
+            return 'Failed to get destinations'
+        geocode_result = gmaps.geocode(address)
+        location = geocode_result[0]['geometry']['location']
+        latitude = location['lat']
+        longitude = location['lng']
+    else:
+        geocode_result = gmaps.reverse_geocode((latitude, longitude))
+
+    places_result = gmaps.places_nearby(
+        location=(latitude, longitude),
+        radius=radius,  # radius in meters, increased to cover more potential attractions
+        type='tourist_attraction',
+        rank_by='prominence'  # Sort by prominence which considers rating, relevance, and location
+    )
+    
+    # Extract the top n attractions, focusing on the most relevant details
+    attractions_info = []
+    destinations = []
+    for place in places_result.get('results', [])[:num_places]:  # Collect destinations for Distance Matrix API
+        if 'geometry' in place:
+            lat_lng = place['geometry']['location']
+            destinations.append((lat_lng['lat'], lat_lng['lng']))
+    print(latitude, longitude)
+    # Get distances from origin to each destination
+    if destinations:
+        distances_result = gmaps.distance_matrix(origins=[(latitude, longitude)], destinations=destinations, mode='driving')
+        distances_info = distances_result.get('rows')[0]['elements']
+    else:
+        return 'Failed to get destinations'
+
+    for i, place in enumerate(places_result.get('results', [])[:num_places]):
+        photo_reference = place['photos'][0]['photo_reference'] if 'photos' in place and place['photos'] else None
+        photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={google_maps_api_key}" if photo_reference else "No image available"
+        distance = distances_info[i]['distance']['text'] if distances_info[i]['status'] == 'OK' else "Distance not available"
+        city = place['vicinity'].split(', ')[-1]
+        place_location = place['geometry']['location']
+        print(place)
+        attraction_details = {
+            'name': place.get('name'),
+            'type': ', '.join(place.get('types', ['Not specified'])),
+            'rating': place.get('rating', 'No rating'),
+            'address': place.get('vicinity'),
+            'city': city,
+            'distance': distance,
+            'image_url': photo_url,
+            'latitude': place_location['lat'],
+            'longitude': place_location['lng']
+        }
+        attractions_info.append(attraction_details)
+    print('test')
+    return attractions_info
+
+
 def get_directions(attractions_info):
     print("\n\n")
 

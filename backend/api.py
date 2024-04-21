@@ -39,6 +39,36 @@ def get_places():
     result['places'] = places
     return jsonify(result)
 
+@cross_origin()
+@app.route('/placesv2', methods=['GET'])
+def get_places_v2():
+    latitude = request.args.get('lat')
+    longitude = request.args.get('long')
+    address = request.args.get('address')
+    
+    num_places = int(request.args.get('num_places'))
+    radius = int(request.args.get('radius'))
+
+    attractions = get_top_attractions(address, latitude, longitude, num_places, radius)
+
+
+    success = True
+    places = []
+    for i, attraction in enumerate(attractions):
+        attraction_details = dict()
+        attraction_details['id'] = i
+        attraction_details['name'] = attraction['name']
+        attraction_details['description'] = 'Placeholder description'
+        attraction_details['image_url'] = attraction['image_url']
+        attraction_details['latitude'] = float(attraction['latitude'])
+        attraction_details['longitude'] = float(attraction['longitude'])
+        attraction_details['city'] = attraction['city']
+        places.append(attraction_details)
+    result = dict()
+    result['success'] = success
+    result['places'] = places
+    return jsonify(result)
+
 def get_description_obj(place):
         id = place['id']
         name = place['name']
