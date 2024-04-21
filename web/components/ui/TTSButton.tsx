@@ -19,7 +19,12 @@ export default function TTSButton({text}: TTSButtonProps) {
 
         const base64Audio = parsedResponse['content']
         const binaryAudio = atob(base64Audio);
-        const blob = new Blob([new Uint8Array([...binaryAudio].map(char => char.charCodeAt(0)))]);
+        const arrayBuffer = new ArrayBuffer(binaryAudio.length);
+        const uint8Array = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < binaryAudio.length; i++) {
+            uint8Array[i] = binaryAudio.charCodeAt(i);
+        }
+        const blob = new Blob([uint8Array]);
 
         const objectURL = URL.createObjectURL(blob);
         const audio = new Audio();

@@ -2,6 +2,8 @@ import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
+import TTSButton from '@/components/ui/TTSButton';
+
 function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
 }
@@ -33,7 +35,7 @@ export default function Dropdown({description, audio}: DropdownProps) {
                 <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
                         <p>{description}</p>
-                        <audio controls src={audio} />
+                        <TTSButton text={description} />
                     </div>
                 </Menu.Items>
             </Transition>
