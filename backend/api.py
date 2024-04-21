@@ -102,15 +102,17 @@ def get_place_descriptions():
 def get_place_descriptionsv2():
     places = request.json['places']
     data = request.json
+    kids_mode = request.json['kids_mode']
+    language = request.json['language']
 
-    language = None
-    if 'language' in data:
-        language = request.json['language']
+    # language = None
+    # if 'language' in data:
+    #     language = request.json['language']
     
-    kids_mode = None
-    if 'kids_mode' in data:
-        kids_mode = request.json['kids_mode']
-        kids_mode = bool(kids_mode)
+    # kids_mode = None
+    # if 'kids_mode' in data:
+    #     kids_mode = request.json['kids_mode']
+    #     kids_mode = bool(kids_mode)
 
     prompt = get_proompt(places, language, kids_mode)
     result = process_gemini_json(get_gemini_result(prompt))

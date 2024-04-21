@@ -30,7 +30,7 @@ export default function Guide() {
     const [addressState, setAddress] = useState<string | null>(null);
 
     const [places, setPlaces] = useState<place[] | null>(null);
-    const [enabled, setEnabled] = useState(false)
+    
     const [isLoadingLocation, setIsLoadingLocation] = useState(true);
 
     const [language, setLanguage] = useState("English");
@@ -126,7 +126,8 @@ export default function Guide() {
             console.log("Error fetching places");
             return;
         }
-
+        console.log("Kids Mode: ", kidsModeEnabled)
+        console.log("Language: ", language)
         const descriptions_response = await fetch(
             `${serverUrl}/placedescriptionsv2?${queryParams}`,
             {
@@ -203,6 +204,7 @@ export default function Guide() {
                                 </div>
                                 <div className="pt-8">
                                     <h2 className="text-xl font-semibold pb-4">Settings⚙️</h2>
+                                    
                                     <Switch.Group as="div" className="flex items-center">
                                         <Switch
                                             checked={kidsModeEnabled}
