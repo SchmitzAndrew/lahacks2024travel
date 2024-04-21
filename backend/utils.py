@@ -46,6 +46,7 @@ def get_location_details(address):
 
 def get_top_attractions(address=None, latitude=None, longitude=None, num_places=10, radius=10000):
     """Retrieve details for the top n attractions near a specified address."""
+
     if latitude is None or longitude is None:
         if address is None:
             return 'Failed to get destinations'
@@ -54,8 +55,8 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
         latitude = location['lat']
         longitude = location['lng']
     else:
-        geocode_result = gmaps.reverse_geocode((longitude, latitude))
-        print(geocode_result)
+        geocode_result = gmaps.reverse_geocode((latitude, longitude))
+
     places_result = gmaps.places_nearby(
         location=(latitude, longitude),
         radius=radius,  # radius in meters, increased to cover more potential attractions
@@ -70,7 +71,7 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
         if 'geometry' in place:
             lat_lng = place['geometry']['location']
             destinations.append((lat_lng['lat'], lat_lng['lng']))
-
+    print(latitude, longitude)
     # Get distances from origin to each destination
     if destinations:
         distances_result = gmaps.distance_matrix(origins=[(latitude, longitude)], destinations=destinations, mode='driving')
@@ -90,10 +91,12 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
             'address': place.get('vicinity'),
             'city': city,
             'distance': distance,
-            'image_url': photo_url
+            'image_url': photo_url,
+            'latitude': latitude,
+            'longitude': longitude
         }
         attractions_info.append(attraction_details)
-    
+    print('test')
     return attractions_info
 
 def get_directions(attractions_info):

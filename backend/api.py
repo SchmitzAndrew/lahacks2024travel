@@ -19,11 +19,8 @@ def get_places():
     num_places = int(request.args.get('num_places'))
     radius = int(request.args.get('radius'))
 
-    try:
-        attractions = get_top_attractions(address, latitude, longitude, num_places, radius)
-    except googlemaps.exceptions.HTTPError as e:
-        current_app.logger.error(f"Google Maps API request failed: {e}")
-        return jsonify({"error": "Failed to fetch attractions", "details": str(e)}), 400
+    attractions = get_top_attractions(address, latitude, longitude, num_places, radius)
+
 
     success = True
     places = []
