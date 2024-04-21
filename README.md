@@ -1,5 +1,5 @@
 ﻿# Hermes - Our LA Hacks 2024 Project
-![image](https://github.com/SchmitzAndrew/lahacks2024travel/assets/8219702/665f9cb0-9947-4f8c-9e93-f98fe4cf501e)
+![image](https://github.com/SchmitzAndrew/lahacks2024travel/assets/8219702/4c398586-057f-4a69-8043-4175b61eec12)
 ## Demo Link
 https://lahacks2024travel.vercel.app/
 ## What is Hermes?
