@@ -148,7 +148,12 @@ def text_to_speech_base64(text: str)->str:
         voice="Daniel",
         model="eleven_multilingual_v2"
         )
-    save(audio, "temp/temp.mp3")
+    
+    if not os.path.exists('./temp/'):
+        os.makedirs('./temp')
+    
+    save(audio, "./temp/temp.mp3")
+
     enc = str(base64.b64encode(open("temp/temp.mp3", "rb").read()))[2:][:-1]
     return str(enc)
 
