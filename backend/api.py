@@ -1,9 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, current_app
 from utils import get_top_attractions, get_gemini_result, text_to_speech_base64
 from flask_cors import CORS, cross_origin
 import concurrent.futures
 import os
-
+import googlemaps.exceptions
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -19,7 +19,11 @@ def get_places():
     num_places = int(request.args.get('num_places'))
     radius = int(request.args.get('radius'))
 
-    attractions = get_top_attractions(address, latitude, longitude, num_places, radius)
+    try:
+        attractions = get_top_attractions(address, latitude, longitude, num_places, radius)
+    except googlemaps.exceptions.HTTPError as e:
+        current_app.logger.error(f"Google Maps API request failed: {e}")
+        return jsonify({"error": "Failed to fetch attractions", "details": str(e)}), 400
 
     success = True
     places = []
