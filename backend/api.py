@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, current_app
-from utils import get_top_attractions, get_gemini_result, text_to_speech_base64, scrape_place_wikipedia, get_proompt, process_gemini_json
+from utils import get_top_attractions, get_gemini_result, text_to_speech_base64, get_proompt, process_gemini_json
 from flask_cors import CORS, cross_origin
 import concurrent.futures
 import os
