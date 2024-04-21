@@ -89,17 +89,41 @@ export default function Guide() {
 
 
         const serverUrl = process.env.NEXT_PUBLIC_FLASK_URL;
-        const response = await fetch(`${serverUrl}/places?${queryParams}`, {
+        const places_response = await fetch(`${serverUrl}/places?${queryParams}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
         });
-        const data = await response.json();
-        if (data.success) {
-            setPlaces(data.places);
-            console.log("Places", data.places)
+        const places_data = await places_response.json();
+        if (places_data.success) {
+            setPlaces(places_data.places as place[]);
+            console.log("Places", places_data.places)
+        } else {
+            console.log('Error fetching places')
+            return
         }
+
+        if(places === null)
+            return
+
+        const descriptions_response = await fetch(`${serverUrl}/places?${queryParams}`, {
+            method: "POST",
+            body: JSON.stringify({'places': places.map((place) => ({'id': place['id'], 'name': place['name']}))}),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const descriptions_data = await descriptions_response.json();
+        if (descriptions_data.success) {
+            //setPlaces(descriptions_data.places as place[]);
+            console.log("Descriptions", descriptions_data.places)
+        } else {
+            console.log('Error fetching descriptions')
+            return
+        }
+
     };
 
     return (
@@ -141,7 +165,6 @@ export default function Guide() {
                             ) : places.length > 0 ? (
                                
                                 <div>
-                                     
                                     <h2 className="text-2xl font-bold pt-6 text-slate-900"> Nearby Places </h2>
                                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
                                         {places.map((place, index) => (
