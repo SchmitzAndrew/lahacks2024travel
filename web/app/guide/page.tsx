@@ -212,7 +212,7 @@ export default function Guide() {
                                 />
                               </>
                             )}
-                          <p>{place.description}</p>
+                          <DescriptionDropdown description={place.description || ""} />
                           <p className="text-sm text-blue-700">
                             Featured Place
                           </p>
