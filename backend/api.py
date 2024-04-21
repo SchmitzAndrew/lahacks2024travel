@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, current_app
-from utils import get_top_attractions, get_gemini_result, text_to_speech_base64
+from utils import get_top_attractions, get_gemini_result, text_to_speech_base64, get_proompt, process_gemini_json
 from flask_cors import CORS, cross_origin
 import concurrent.futures
 import os
@@ -30,8 +30,8 @@ def get_places():
         attraction_details['name'] = attraction['name']
         attraction_details['description'] = 'Placeholder description'
         attraction_details['image_url'] = attraction['image_url']
-        attraction_details['latitude'] = attraction['latitude']
-        attraction_details['longitude'] = attraction['longitude']
+        attraction_details['latitude'] = float(attraction['latitude'])
+        attraction_details['longitude'] = float(attraction['longitude'])
         attraction_details['city'] = attraction['city']
         places.append(attraction_details)
     result = dict()
@@ -66,6 +66,23 @@ def get_place_descriptions():
     result['descriptions'] = descriptions
     
     return jsonify(result)
+
+
+@cross_origin()
+@app.route('/placedescriptionsv2', methods=['POST'])
+def get_place_descriptionsv2():
+    places = request.json['places']
+
+    success = True
+    descriptions = []
+
+    prompt = get_proompt(places)
+    with open('prompt.txt', 'w') as f:
+        f.write(prompt)
+    result = process_gemini_json(get_gemini_result(prompt))
+    print(prompt)
+    return result
+    # return jsonify(result)
 
 
 @cross_origin()
