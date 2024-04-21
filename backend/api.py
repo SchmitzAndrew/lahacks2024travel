@@ -27,7 +27,7 @@ def get_places():
         attraction_details = dict()
         attraction_details['id'] = i
         attraction_details['name'] = attraction['name']
-        attraction_details['description'] = 'Placeholder description'
+        attraction_details['description'] = 'Description loading...'
         attraction_details['image_url'] = attraction['image_url']
         attraction_details['latitude'] = float(attraction['latitude'])
         attraction_details['longitude'] = float(attraction['longitude'])

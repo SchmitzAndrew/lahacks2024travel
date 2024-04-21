@@ -191,9 +191,8 @@ export default function Guide() {
                         {places !== null ? (
                             <div>
                                 <div>
-                                    <h2 className="text-2xl font-bold pt-6 text-slate-900">
-                                        {" "}
-                                        Nearby Places{" "}
+                                    <h2 className="pb-2 text-2xl font-bold pt-6 text-slate-900">
+                                        Nearby Destinations
                                     </h2>
                                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
                                         {places.map((place, index) =>
@@ -219,7 +218,9 @@ export default function Guide() {
                                                             </>
                                                         )}
                                                     <DescriptionDropdown description={place.description || ""} />
-                                                    <button onClick={goNextPlace}>Next Place</button>
+                                                    <div className="flex justify-end pt-3 pb-2">
+                                                        <AnimatedButton onClick={goNextPlace}>Next Destination</AnimatedButton>
+                                                    </div>
                                                 </li>
                                             ) : (
                                                 // Render other elements
@@ -235,7 +236,7 @@ export default function Guide() {
                                                         alt={place.name}
                                                         className="w-full h-auto rounded-xl"
                                                     />
-                                                    <p>{place.description}</p>
+                                                    <DescriptionDropdown description={place.description || ""} />
                                                 </li>
                                             )
                                         )}
