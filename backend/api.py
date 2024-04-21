@@ -86,4 +86,4 @@ def generate_tts():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000)) 
-    app.run(host='0.0.0.0', port=port, debug=bool(os.environ.get('BACKEND_DEBUG', False)))
+    app.run(host='0.0.0.0', port=port, debug=bool(os.environ.get('BACKEND_DEBUG', True)))

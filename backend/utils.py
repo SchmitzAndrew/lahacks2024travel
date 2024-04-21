@@ -55,6 +55,7 @@ def get_top_attractions(address=None, latitude=None, longitude=None, num_places=
         longitude = location['lng']
     else:
         geocode_result = gmaps.reverse_geocode((longitude, latitude))
+        print(geocode_result)
     places_result = gmaps.places_nearby(
         location=(latitude, longitude),
         radius=radius,  # radius in meters, increased to cover more potential attractions
