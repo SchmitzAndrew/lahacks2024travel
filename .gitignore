@@ -43,3 +43,4 @@ backend/.env
 **.pyc
 */temp
 .venv
+web/.env
